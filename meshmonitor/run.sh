@@ -83,4 +83,10 @@ else
 fi
 
 # Execute the original entrypoint and command
-exec /usr/local/bin/docker-entrypoint.sh /usr/bin/supervisord -c /etc/supervisord.conf
+# Filter logs to reduce disk space usage while keeping important messages:
+# - Keep lines with [WARN] or [ERROR] tags
+# - Keep lines without any log level tags (startup messages, supervisord output)
+# - Filter out [INFO] and [DEBUG] messages which can be very verbose
+# To see all logs, remove the grep filter below
+exec /usr/local/bin/docker-entrypoint.sh /usr/bin/supervisord -c /etc/supervisord.conf 2>&1 | \
+  grep -v -E "^\[(INFO|DEBUG)\]" || true

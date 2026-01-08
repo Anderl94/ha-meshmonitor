@@ -115,8 +115,46 @@ This add-on uses the `:latest` tag of the upstream [MeshMonitor](https://github.
 
 Alternatively, you can watch the [MeshMonitor releases](https://github.com/yeraze/meshmonitor/releases) and open an issue requesting a version bump.
 
+## Logging and Disk Space
+
+**Important:** This add-on filters logs to prevent excessive disk space usage.
+
+MeshMonitor generates very verbose logs when monitoring an active mesh network. Without filtering, these logs are captured by Home Assistant's journald system and can consume multiple gigabytes of disk space over time, potentially filling up your system.
+
+### Default Behavior
+
+To prevent disk space issues, this add-on filters logs by default:
+- **Shows:** [WARN] and [ERROR] messages, startup output, supervisord messages
+- **Filters out:** [INFO] and [DEBUG] messages (which are very verbose)
+- **Result:** 80-90% reduction in log volume while keeping important troubleshooting information
+
+### To Enable Full Logging
+
+If you need complete logs for troubleshooting:
+
+1. Access the add-on container via SSH or console
+2. Edit the last line of `/run.sh`
+3. Remove the `| grep -v -E "^\[(INFO|DEBUG)\]" || true` portion
+4. Restart the add-on
+
+**Warning:** With full logging enabled, monitor your Home Assistant disk space regularly. You may need to manually vacuum journald logs:
+```bash
+journalctl --vacuum-size=500M
+```
+
+### Checking Disk Space
+
+Monitor your Home Assistant disk usage in:
+- Settings → System → Storage
+- Via SSH: `df -h`
+- Journald logs specifically: `du -sh /var/log/journal`
+
 ## Support
 
 For issues with this add-on, please open an issue on [GitHub](https://github.com/bhardie/ha-meshmonitor/issues).
 
 For issues with MeshMonitor itself, see the [upstream project](https://github.com/yeraze/meshmonitor).
+
+---
+
+Built with the help of [Claude Code](https://claude.ai/code)
