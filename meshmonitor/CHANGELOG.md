@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.0.5] - 2026-01-27
+
+### Changed
+- Updated MeshMonitor to v3.3.0
+
+## [0.0.4] - 2026-01-25
+
+### Changed
+- Updated MeshMonitor to v3.2.4
+
 ## [0.0.3] - 2026-01-14
 
 ### Changed
